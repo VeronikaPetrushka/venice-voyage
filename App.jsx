@@ -2,6 +2,8 @@ import React from 'react';
 import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { MusicProvider } from './src/constants/music';
+import MusicPlayer from './src/components/MusicPlayer';
 import HomeScreen from './src/screens/HomeScreen';
 
 enableScreens();
@@ -12,7 +14,9 @@ const Stack = createStackNavigator();
 const App = () => {
   
     return (
-        <NavigationContainer>
+        <MusicProvider>
+            <MusicPlayer />
+            <NavigationContainer>
                     <Stack.Navigator initialRouteName="HomeScreen">
                         <Stack.Screen 
                             name="HomeScreen" 
@@ -20,7 +24,8 @@ const App = () => {
                             options={{ headerShown: false }} 
                         />
                     </Stack.Navigator>
-        </NavigationContainer>
+            </NavigationContainer>
+        </MusicProvider>
     );
 };
 

@@ -2,14 +2,32 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
 import LinearGradient from "react-native-linear-gradient";
 import { getRandomTip } from "../constants/tips.js";
+import WelcomeModal from "./WelcomeModal.jsx";
+import SettingsModal from "./SettingsModal.jsx";
+import TripModal from "./TripModal.jsx";
 import TipModal from "./TipModal";
 import Map from "./Map";
 
 const { height , width} = Dimensions.get('window');
 
 const Home = () => {
+    const [welcomeModalVisible, setWelcomeModalVisible] = useState(true);
+    const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+    const [tripModalVisible, setTripModalVisible] = useState(false);
     const [tipModalVisible, setTipModalVisible] = useState(false);
     const [currentTip, setCurrentTip] = useState({ name: '', tip: '' });
+
+    const handleWelcomeVisible = () => {
+        setWelcomeModalVisible(!welcomeModalVisible);
+    };
+
+    const handleSettingsVisible = () => {
+        setSettingsModalVisible(!settingsModalVisible);
+    }
+
+    const handleTripVisible = () => {
+        setTripModalVisible(!tripModalVisible);
+    };
 
     const handleTipVisible = () => {
         setTipModalVisible(!tipModalVisible);
@@ -26,11 +44,11 @@ const Home = () => {
         <View style={styles.container}>
 
             <View style={styles.upperPanel}>
-                <TouchableOpacity style={styles.infoBtn}>
+                <TouchableOpacity style={styles.infoBtn} onPress={handleTripVisible}>
                     <Text style={styles.infoText}>Your trip</Text>
                 </TouchableOpacity>
                 <View style={styles.settingsContainer}>
-                    <TouchableOpacity style={styles.settingsBtn}></TouchableOpacity>
+                    <TouchableOpacity style={styles.settingsBtn} onPress={handleSettingsVisible}></TouchableOpacity>
                     <Text style={styles.settingsText}>Settings</Text>
                 </View>
             </View>
@@ -73,6 +91,9 @@ const Home = () => {
                 </TouchableOpacity>
             </View>
 
+            <SettingsModal visible={settingsModalVisible} onClose={handleSettingsVisible} />
+            <WelcomeModal visible={welcomeModalVisible} onClose={handleWelcomeVisible}/>
+            <TripModal visible={tripModalVisible} onClose={handleTripVisible} />
             <TipModal visible={tipModalVisible} onClose={handleTipVisible} tip={currentTip} newTip={handleGenerateNewTip} />
 
         </View>

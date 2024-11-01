@@ -18,11 +18,9 @@ const TipModal = ({ visible, onClose, tip, newTip }) => {
                 <Text style={styles.modalTitle}>Your daily traveler tip:</Text>
                 <Text style={styles.name}>{tip.name}</Text>
                 <Text style={styles.tip}>{tip.tip}</Text>
-                <View style={styles.modalButtons}>
-                    <TouchableOpacity style={styles.modalBtnNew} onPress={newTip}>
-                        <Text style={styles.btnNewText}>Generate new</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.modalBtnNew} onPress={newTip}>
+                    <Text style={styles.btnNewText}>Generate new</Text>
+                </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.adviceBtn} onPress={onClose}>
                 <LinearGradient
@@ -62,9 +60,8 @@ const styles = StyleSheet.create({
             width: 20,
             height: 20,
         },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.2,
         shadowRadius: 4,
-        elevation: 5,
     },
     modalTitle: {
         fontSize: 18,
@@ -73,11 +70,6 @@ const styles = StyleSheet.create({
         color: '#000',
         marginBottom: 20,
         textAlign: 'center',
-    },
-    modalButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
     },
 
     name: {
