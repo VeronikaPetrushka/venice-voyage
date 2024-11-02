@@ -82,7 +82,7 @@ const Map = () => {
                         />
                         <Callout tooltip onPress={goToDetailsScreen}>
                             <View style={styles.calloutContainer}>
-                                <Text style={styles.placeName}>{item.name}</Text>
+                                <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
                                 <TouchableOpacity style={styles.detailsButton}>
                                     <Text style={styles.detailsButtonText}>Details</Text>
                                 </TouchableOpacity>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#3C3C3B',
         marginBottom: 5,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     detailsButton: {
         backgroundColor: '#C06014',

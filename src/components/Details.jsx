@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from "react-native-maps";
+import Icons from "./Icons";
 
 const { height } = Dimensions.get('window');
 
 const Details = ({ place }) => {
     const mapRef = useRef(null);
+    const navigation = useNavigation();
     const [zoomedIn, setZoomedIn] = useState(false);
     const [markerSize, setMarkerSize] = useState(40);
 
@@ -34,6 +37,9 @@ const Details = ({ place }) => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack('')}>
+                <Icons type={'back'}/>
+            </TouchableOpacity>
             <View style={styles.imageContainer}>
                 <Image source={place.image} style={styles.image} />
             </View>
@@ -83,6 +89,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 0
+    },
+    backIcon: {
+        width: 65,
+        height: 65,
+        padding: 10,
+        position: 'absolute',
+        top: height * 0.055,
+        left: 10,
+        zIndex: 10
     },
     imageContainer: {
         alignItems: "center",
