@@ -1,10 +1,12 @@
 import { View } from "react-native"
-import Home from "../components/Home"
+import Details from "../components/Details"
 
-const HomeScreen = () => {
+const DetailsScreen = ({ route }) => {
+    const { place } = route.params;
+
     return (
         <View style={styles.container}>
-            <Home />
+            <Details place={place} />
         </View>
     )
 }; 
@@ -16,4 +18,4 @@ const styles = {
     }
 }
 
-export default HomeScreen;
+export default DetailsScreen;

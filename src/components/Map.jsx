@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import places from '../constants/places.js';
-
-const { height } = Dimensions.get('window');
 
 const Map = () => {
     const mapRef = useRef(null);
+    const navigation = useNavigation();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [selectedPlace, setSelectedPlace] = useState(null);
     const [markerSize, setMarkerSize] = useState(40);
 
     useEffect(() => {
@@ -26,6 +27,7 @@ const Map = () => {
     const handleNextMarker = () => {
         const nextIndex = (currentIndex + 1) % places.length;
         setCurrentIndex(nextIndex);
+        setSelectedPlace(null);
 
         const { lat, lng } = places[nextIndex].coordinates[0];
         mapRef.current.animateToRegion({
@@ -40,6 +42,16 @@ const Map = () => {
         const zoomFactor = 0.1 / region.latitudeDelta;
         const newSize = 40 * zoomFactor;
         setMarkerSize(Math.max(20, Math.min(newSize, 120)));
+    };
+
+    const handleMarkerPress = (place) => {
+        setSelectedPlace(place);
+    };
+
+    const goToDetailsScreen = () => {
+        if (selectedPlace) {
+            navigation.navigate('DetailsScreen', { place: selectedPlace });
+        }
     };
 
     return (
@@ -57,18 +69,26 @@ const Map = () => {
             >
                 {places.map((item) => (
                     <Marker
-                    key={item.name}
-                    coordinate={{
-                        latitude: item.coordinates[0].lat,
-                        longitude: item.coordinates[0].lng,
-                    }}
-                    title={item.name}
-                >
-                    <Image
-                        source={ item.image }
-                        style={[styles.markerImage, { width: markerSize, height: markerSize }]}
-                    />
-                </Marker>
+                        key={item.name}
+                        coordinate={{
+                            latitude: item.coordinates[0].lat,
+                            longitude: item.coordinates[0].lng,
+                        }}
+                        onPress={() => handleMarkerPress(item)}
+                    >
+                        <Image
+                            source={ item.image }
+                            style={[styles.markerImage, { width: markerSize, height: markerSize }]}
+                        />
+                        <Callout tooltip onPress={goToDetailsScreen}>
+                            <View style={styles.calloutContainer}>
+                                <Text style={styles.placeName}>{item.name}</Text>
+                                <TouchableOpacity style={styles.detailsButton}>
+                                    <Text style={styles.detailsButtonText}>Details</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </Callout>
+                    </Marker>
                 ))}
             </MapView>
             <TouchableOpacity style={styles.btn} onPress={handleNextMarker}>
@@ -112,15 +132,31 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500'
     },
-    iconBack: {
+    calloutContainer: {
+        backgroundColor: '#fff',
         padding: 10,
-        transform: [{ rotate: '180deg' }],
-        width: 65,
-        height: 65,
-        position: 'absolute',
-        top: height * 0.05,
-        left: 15,
-        zIndex: 10
+        borderRadius: 12,
+        alignItems: 'center',
+        minWidth: 120,
+    },
+    placeName: {
+        fontSize: 15,
+        fontWeight: '500',
+        color: '#3C3C3B',
+        marginBottom: 5,
+        textAlign: 'center'
+    },
+    detailsButton: {
+        backgroundColor: '#C06014',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    detailsButtonText: {
+        color: '#fff',
     },
 });
 
