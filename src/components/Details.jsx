@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import React, { useRef, useState, useEffect } from "react";
+import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker } from "react-native-maps";
 import Icons from "./Icons";
 
@@ -11,6 +12,45 @@ const Details = ({ place }) => {
     const navigation = useNavigation();
     const [zoomedIn, setZoomedIn] = useState(false);
     const [markerSize, setMarkerSize] = useState(40);
+    const [visited, setVisited] = useState(false);
+    const [checkInDisabled, setCheckInDisabled] = useState(false);
+
+    const checkIfVisited = async () => {
+        try {
+            const storedVisitedTrips = await AsyncStorage.getItem('visitedTrips');
+            const visitedTripsArray = storedVisitedTrips ? JSON.parse(storedVisitedTrips) : [];
+            const visitedTrip = visitedTripsArray.find(trip => trip.place && trip.place.name === place.name);
+            setVisited(!!visitedTrip);
+            console.log(`Visited status for ${place.name}:`, !!visitedTrip);
+        } catch (error) {
+            Alert.alert('Error', 'Could not check visit status: ' + error.message);
+            console.error(error);
+        }
+    };
+
+    const loadTrips = async () => {
+        try {
+            const storedTrip = await AsyncStorage.getItem('trip');
+            const tripArray = storedTrip ? JSON.parse(storedTrip) : [];
+            const availableTrips = tripArray.some(trip => !trip.isChecked && trip.quest);
+            setCheckInDisabled(!availableTrips);
+            console.log('Check-in disabled:', !availableTrips);
+        } catch (error) {
+            Alert.alert('Error', 'Could not load trips: ' + error.message);
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        console.log("Details component mounted");
+        checkIfVisited();
+        loadTrips();
+
+        return () => {
+            console.log("Details component unmounted");
+            mapRef.current = null;
+        };
+    }, [place]);
 
     const handleZoomToggle = () => {
         const { lat, lng } = place.coordinates[0];
@@ -35,14 +75,16 @@ const Details = ({ place }) => {
         setZoomedIn(!zoomedIn);
     };
 
+    const handleBackPress = () => {
+        navigation.navigate('HomeScreen');
+    };
+    
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack('')}>
+            <TouchableOpacity style={styles.backIcon} onPress={handleBackPress}>
                 <Icons type={'back'}/>
             </TouchableOpacity>
-            <View style={styles.imageContainer}>
                 <Image source={place.image} style={styles.image} />
-            </View>
             <View style={styles.mapContainer}>
                 <MapView
                     ref={mapRef}
@@ -53,6 +95,7 @@ const Details = ({ place }) => {
                         latitudeDelta: 0.05,
                         longitudeDelta: 0.05,
                     }}
+                    onError={(e) => console.error('MapView error:', e)}
                 >
                     <Marker
                         coordinate={{
@@ -60,16 +103,27 @@ const Details = ({ place }) => {
                             longitude: place.coordinates[0].lng,
                         }}
                     >
-                        <Image
-                            source={place.image}
-                            style={[styles.markerImage, { width: markerSize, height: markerSize }]}
-                        />
+                        <View>
+                            <Image
+                                source={place.image}
+                                style={[styles.markerImage, { width: markerSize, height: markerSize }]}
+                            />
+                            {visited && (
+                                <View style={styles.visitedIcon}>
+                                    <Icons type={'visited'} />
+                                </View>
+                            )}
+                        </View>
                     </Marker>
                     <TouchableOpacity style={styles.zoomButton} onPress={handleZoomToggle}>
                         <Text style={styles.zoomButtonText}>{zoomedIn ? "Zoom Out" : "Zoom In"}</Text>
                     </TouchableOpacity>
                 </MapView>
-                <TouchableOpacity style={styles.checkBtn}>
+                <TouchableOpacity  
+                    style={[styles.checkBtn, checkInDisabled && { opacity: 0.5 }]} 
+                    onPress={() => navigation.navigate('CheckInScreen', {place: place})}
+                    disabled={checkInDisabled}
+                >
                     <Text style={styles.checkBtnText}>Check in</Text>
                 </TouchableOpacity>
             </View>
@@ -85,28 +139,28 @@ const Details = ({ place }) => {
     );
 };
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 0
+        paddingTop: 0,
+        backgroundColor: '#FAF3E0'
     },
     backIcon: {
         width: 65,
         height: 65,
         padding: 10,
         position: 'absolute',
-        top: height * 0.055,
+        top: height * 0.052,
         left: 10,
         zIndex: 10
-    },
-    imageContainer: {
-        alignItems: "center",
-        marginBottom: 16,
     },
     image: {
         width: '100%',
         height: 300,
-        borderRadius: 16,
+        borderBottomLeftRadius: 16,
+        borderBottomRightRadius: 16,
+        marginBottom: 16,
     },
     mapContainer: {
         width: '100%',
@@ -119,13 +173,13 @@ const styles = StyleSheet.create({
     },
     map: {
         width: "48%",
-        height: 200,
+        height: height * 0.24,
         borderRadius: 10,
         overflow: 'hidden'
     },
     checkBtn: {
         width: "48%",
-        height: 200,
+        height: height * 0.24,
         borderRadius: 10,
         backgroundColor: '#FFD662',
         alignItems: 'center',
@@ -178,6 +232,14 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#3C3C3B',
         textAlign: 'justify'
+    },
+    visitedIcon: {
+        width: 30,
+        height: 30,
+        position: 'absolute',
+        top: -5,
+        right: -5,
+        zIndex: 15,
     },
 });
 

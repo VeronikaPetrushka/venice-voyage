@@ -1,32 +1,63 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 import LinearGradient from "react-native-linear-gradient";
 import { getRandomTip } from "../constants/tips.js";
 import WelcomeModal from "./WelcomeModal.jsx";
 import SettingsModal from "./SettingsModal.jsx";
 import TripModal from "./TripModal.jsx";
+import Tutorial from "./Tutorial.jsx";
 import TipModal from "./TipModal";
 import Map from "./Map";
 
 const { height , width} = Dimensions.get('window');
 
 const Home = () => {
+    const navigation = useNavigation();
     const [welcomeModalVisible, setWelcomeModalVisible] = useState(true);
     const [settingsModalVisible, setSettingsModalVisible] = useState(false);
     const [tripModalVisible, setTripModalVisible] = useState(false);
+    const [tutorialModalVisible, setTutorialModalVisible] = useState(false);
     const [tipModalVisible, setTipModalVisible] = useState(false);
     const [currentTip, setCurrentTip] = useState({ name: '', tip: '' });
+    const [uploadedImage, setUploadedImage] = useState({ uri: Image.resolveAssetSource(require('../assets/avatar/user.png')).uri });
+
+    const loadAvatar = async () => {
+        try {
+          const storedImageUri = await AsyncStorage.getItem('uploadedImage');
+            
+          if (storedImageUri) {
+            setUploadedImage(({ uri: storedImageUri }));
+        } else {
+            setUploadedImage({ uri: Image.resolveAssetSource(require('../assets/avatar/user.png')).uri });
+        }
+        } catch (error) {
+          console.error('Error loading avatar:', error);
+        }
+      };
+
+      useEffect(() => {
+        loadAvatar();
+      }, []);
 
     const handleWelcomeVisible = () => {
         setWelcomeModalVisible(!welcomeModalVisible);
     };
 
-    const handleSettingsVisible = () => {
+    const handleSettingsVisible = async () => {
         setSettingsModalVisible(!settingsModalVisible);
+        setUploadedImage({ uri: Image.resolveAssetSource(require('../assets/avatar/user.png')).uri });
+        await loadAvatar();
     }
 
     const handleTripVisible = () => {
         setTripModalVisible(!tripModalVisible);
+    };
+
+
+    const handleTutorialVisible = () => {
+        setTutorialModalVisible(!tutorialModalVisible);
     };
 
     const handleTipVisible = () => {
@@ -48,14 +79,19 @@ const Home = () => {
                     <Text style={styles.infoText}>Your trip</Text>
                 </TouchableOpacity>
                 <View style={styles.settingsContainer}>
-                    <TouchableOpacity style={styles.settingsBtn} onPress={handleSettingsVisible}></TouchableOpacity>
+                    <TouchableOpacity style={styles.settingsBtn} onPress={handleSettingsVisible}>
+                        <Image 
+                            source={uploadedImage} 
+                            style={styles.avatarImage}
+                        />
+                    </TouchableOpacity>
                     <Text style={styles.settingsText}>Settings</Text>
                 </View>
             </View>
 
             <Map />
 
-            <TouchableOpacity style={styles.tutorialBtn}>
+            <TouchableOpacity style={styles.tutorialBtn} onPress={handleTutorialVisible}>
                 <LinearGradient
                             colors={['#FFD662', '#C06014']}
                             
@@ -79,14 +115,14 @@ const Home = () => {
                     </LinearGradient>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.scoreBtn}>
+                <TouchableOpacity style={styles.scoreBtn} onPress={() => navigation.navigate('StatisticScreen')}>
                     <LinearGradient
                             colors={['#C06014', '#854442']}
                             start={{ x: -0.15, y: 0.5 }}
                             end={{ x: 1.1, y: 0.5 }}
                             style={[styles.gradient]}
                         >
-                        <Text style={styles.btnText}>Scoreboard</Text>
+                        <Text style={styles.btnText}>Statistic</Text>
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
@@ -94,6 +130,7 @@ const Home = () => {
             <SettingsModal visible={settingsModalVisible} onClose={handleSettingsVisible} />
             <WelcomeModal visible={welcomeModalVisible} onClose={handleWelcomeVisible}/>
             <TripModal visible={tripModalVisible} onClose={handleTripVisible} />
+            <Tutorial visible={tutorialModalVisible} onClose={handleTutorialVisible}/>
             <TipModal visible={tipModalVisible} onClose={handleTipVisible} tip={currentTip} newTip={handleGenerateNewTip} />
 
         </View>
@@ -152,6 +189,12 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         borderWidth: 1,
         borderColor: '#854442'
+    },
+
+    avatarImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover'
     },
 
     settingsText: {

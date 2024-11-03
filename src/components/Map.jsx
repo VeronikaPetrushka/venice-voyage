@@ -1,8 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import places from '../constants/places.js';
+import Icons from "./Icons";
+
 
 const Map = () => {
     const mapRef = useRef(null);
@@ -10,6 +13,27 @@ const Map = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [markerSize, setMarkerSize] = useState(40);
+    const [visited, setVisited] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            const checkIfVisited = async () => {
+                try {
+                    const storedVisitedTrips = await AsyncStorage.getItem('visitedTrips');
+                    const visitedTripsArray = storedVisitedTrips ? JSON.parse(storedVisitedTrips) : [];
+                    const placeName = places.map((place) => (place.name))
+                    const visitedTrip = visitedTripsArray.find(trip => 
+                        trip.place && trip.place.name === placeName
+                    );
+                    setVisited(!!visitedTrip);
+                } catch (error) {
+                    Alert.alert('Error', 'Could not check visit status: ' + error.message);
+                }
+            };
+
+            checkIfVisited();
+        }, [])
+    );
 
     useEffect(() => {
         if (mapRef.current) {
@@ -76,10 +100,17 @@ const Map = () => {
                         }}
                         onPress={() => handleMarkerPress(item)}
                     >
-                        <Image
-                            source={ item.image }
-                            style={[styles.markerImage, { width: markerSize, height: markerSize }]}
-                        />
+                        <View>
+                            <Image
+                                source={item.image}
+                                style={[styles.markerImage, { width: markerSize, height: markerSize }]}
+                            />
+                            {visited && (
+                                <View style={styles.visitedIcon}>
+                                    <Icons type={'visited'} />
+                                </View>
+                            )}
+                        </View>
                         <Callout tooltip onPress={goToDetailsScreen}>
                             <View style={styles.calloutContainer}>
                                 <Text style={styles.placeName} numberOfLines={1} ellipsizeMode="tail">{item.name}</Text>
@@ -157,6 +188,14 @@ const styles = StyleSheet.create({
     },
     detailsButtonText: {
         color: '#fff',
+    },
+    visitedIcon: {
+        width: 30,
+        height: 30,
+        position: 'absolute',
+        top: -5,
+        right: -5,
+        zIndex: 15,
     },
 });
 

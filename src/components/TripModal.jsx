@@ -17,6 +17,7 @@ const TripModal = ({ visible, onClose }) => {
         arrivalDate: '',
         departureDate: '',
     });
+    const [duplicateDateError, setDuplicateDateError] = useState('');
 
     useEffect(() => {
         if (visible) {
@@ -86,17 +87,30 @@ const TripModal = ({ visible, onClose }) => {
         setIsChecked(!isChecked);
     };
     
-    const handleSubmit = async () => {
+    const handleSubmit = async (quest) => {
         if (validateForm()) {
             const tripDetails = {
                 arrivalDate: arrivalDate ? arrivalDate.toLocaleDateString('en-GB').replace(/\//g, '.') : null,
                 departureDate: departureDate ? departureDate.toLocaleDateString('en-GB').replace(/\//g, '.') : null,
                 isChecked,
+                quest
             };
     
             try {
                 const storedTrip = await AsyncStorage.getItem('trip');
                 const tripArray = storedTrip ? JSON.parse(storedTrip) : [];
+
+                const duplicateTrip = tripArray.find(trip => 
+                    trip.arrivalDate === tripDetails.arrivalDate && 
+                    trip.departureDate === tripDetails.departureDate
+                );
+
+                if (duplicateTrip) {
+                    setDuplicateDateError('This combination of arrival and departure dates is already recorded. Please choose different dates.');
+                    return;
+                } else {
+                    setDuplicateDateError('');
+                }
     
                 tripArray.push(tripDetails);
     
@@ -163,6 +177,8 @@ const TripModal = ({ visible, onClose }) => {
 
                                 {errors.departureDate ? <Text style={styles.error}>{errors.departureDate}</Text> : null}
 
+                                {duplicateDateError ? <Text style={styles.error}>{duplicateDateError}</Text> : null}
+
                                 {showCalendar && (
                                     <Calendar
                                         style={{ marginTop: 20 }}
@@ -197,11 +213,11 @@ const TripModal = ({ visible, onClose }) => {
                                     </TouchableOpacity>
                                 </View>
 
-                                <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+                                <TouchableOpacity onPress={() => handleSubmit(true)} style={styles.submitButton}>
                                     <Text style={styles.submitButtonText}>Start your quest!</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={styles.cancelBtn} onPress={handleSubmit}>
+                                <TouchableOpacity style={styles.cancelBtn} onPress={() => handleSubmit(false)}>
                                     <Text style={styles.submitButtonText}>I’m just looking</Text>
                                 </TouchableOpacity>
 

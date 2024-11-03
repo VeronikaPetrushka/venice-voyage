@@ -6,7 +6,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { useMusic } from '../constants/music.js';
 import Icons from './Icons';
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 const SettingsModal = ({ visible, onClose }) => {
     const [name, setName] = useState("");
@@ -94,26 +94,18 @@ const SettingsModal = ({ visible, onClose }) => {
     };
 
     const handleReset = async () => {
-        try {
-            await AsyncStorage.setItem('userProfile', "");
-            await AsyncStorage.removeItem('uploadedImage');
-            await AsyncStorage.removeItem('nextGameTime');
-            await AsyncStorage.removeItem('currentGameIndex');
-            await AsyncStorage.removeItem('progress');
-            await AsyncStorage.removeItem('UserFolders');
+      try {
+          await AsyncStorage.removeItem('trip');
+          await AsyncStorage.removeItem('visitedTrips');
+          await AsyncStorage.removeItem('userProfile');
+          await AsyncStorage.removeItem('uploadedImage');
+          await AsyncStorage.removeItem('score');
 
-            setShowResetConfirmation(false);
-            onClose();
-
-            Alert.alert('Progress Reset', 'Your progress has been reset successfully!', [
-                { text: 'OK', onPress: () => console.log('OK Pressed') }
-            ]);
-
-        } catch (error) {
-            console.error('Error resetting progress:', error);
-            Alert.alert('Error', 'There was a problem resetting your progress. Please try again later.');
-        }
-    };
+          Alert.alert('Success', 'All trip data has been reset.');
+      } catch (error) {
+          Alert.alert('Error', 'Failed to reset data: ' + error.message);
+      }
+  };
 
     return (
         <Modal
@@ -216,8 +208,8 @@ const styles = StyleSheet.create({
     modalContent: {
         width: '100%',
         height: '90%',
-        padding: 15,
-        paddingTop: 40,
+        padding: 5,
+        paddingVertical: 40,
         backgroundColor: 'white',
         borderRadius: 15,
         alignItems: 'center',
@@ -310,7 +302,7 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     resetBtn: {
-        width: '90%',
+        width: width * 0.7,
         backgroundColor: 'transparent',
         borderWidth: 1,
         borderColor: '#854442',
@@ -329,9 +321,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
         marginBottom: 60,
+        color: '#3C3C3B'
     },
     cancelReset: {
-        width: '100%',
+        width: width * 0.7,
         backgroundColor: '#854442',
         borderRadius: 15,
         padding: 15,
