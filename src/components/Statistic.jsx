@@ -96,7 +96,13 @@ const Statistic = () => {
                 }}
             />
 
-            {!arrivalDate && !departureDate || !arrivalDate || !departureDate && (
+            {(!arrivalDate && !departureDate) && (
+                <Text style={styles.selectedRange}>
+                    Select any date range to see visited places
+                </Text>
+            )}
+
+            {!arrivalDate || !departureDate && (
                 <Text style={styles.selectedRange}>
                     Select any date range to see visited places
                 </Text>
@@ -125,6 +131,7 @@ const Statistic = () => {
                             <Text style={styles.tripText}>
                                 {item.place.name} - {formatDate(item.visitedDate)}
                             </Text>
+                            <Text style={styles.tripPlanned}>Planned: {formatDate(arrivalDate)} - {formatDate(departureDate)}</Text>
                         </View>
                     </View>
                 )}
@@ -174,6 +181,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#fff',
         textAlign: 'center'
+    },
+    tripPlanned: {
+        fontSize: 12,
+        color: '#fff',
+        textAlign: 'center',
+        fontWeight: '300'
     },
     backIcon: {
         width: 65,
