@@ -13,27 +13,27 @@ const Map = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [markerSize, setMarkerSize] = useState(40);
-    const [visited, setVisited] = useState(false);
+    // const [visited, setVisited] = useState(false);
 
-    useFocusEffect(
-        useCallback(() => {
-            const checkIfVisited = async () => {
-                try {
-                    const storedVisitedTrips = await AsyncStorage.getItem('visitedTrips');
-                    const visitedTripsArray = storedVisitedTrips ? JSON.parse(storedVisitedTrips) : [];
-                    const placeName = places.map((place) => (place.name))
-                    const visitedTrip = visitedTripsArray.find(trip => 
-                        trip.place && trip.place.name === placeName
-                    );
-                    setVisited(!!visitedTrip);
-                } catch (error) {
-                    Alert.alert('Error', 'Could not check visit status: ' + error.message);
-                }
-            };
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         const checkIfVisited = async () => {
+    //             try {
+    //                 const storedVisitedTrips = await AsyncStorage.getItem('visitedTrips');
+    //                 const visitedTripsArray = storedVisitedTrips ? JSON.parse(storedVisitedTrips) : [];
+    //                 const placeName = places.map((place) => (place.name))
+    //                 const visitedTrip = visitedTripsArray.find(trip => 
+    //                     trip.place && trip.place.name === placeName
+    //                 );
+    //                 setVisited(!!visitedTrip);
+    //             } catch (error) {
+    //                 Alert.alert('Error', 'Could not check visit status: ' + error.message);
+    //             }
+    //         };
 
-            checkIfVisited();
-        }, [])
-    );
+    //         checkIfVisited();
+    //     }, [])
+    // );
 
     useEffect(() => {
         if (mapRef.current) {
@@ -105,11 +105,11 @@ const Map = () => {
                                 source={item.image}
                                 style={[styles.markerImage, { width: markerSize, height: markerSize }]}
                             />
-                            {visited && (
+                            {/* {visited && (
                                 <View style={styles.visitedIcon}>
                                     <Icons type={'visited'} />
                                 </View>
-                            )}
+                            )} */}
                         </View>
                         <Callout tooltip onPress={goToDetailsScreen}>
                             <View style={styles.calloutContainer}>

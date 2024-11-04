@@ -109,6 +109,11 @@ const Statistic = () => {
             )}
 
             <Text style={styles.tripTitle}>Matching Trips:</Text>
+
+            {filteredTrips.length === 0 && arrivalDate && departureDate && (
+                <Text style={styles.noTripsText}>No matching trips found in the selected date range.</Text>
+            )}
+
             <FlatList
                 style={{width: '100%'}}
                 data={filteredTrips}
@@ -124,10 +129,6 @@ const Statistic = () => {
                     </View>
                 )}
             />
-
-            {filteredTrips.length === 0 && arrivalDate && departureDate && (
-                <Text style={styles.noTripsText}>No matching trips found in the selected date range.</Text>
-            )}
         </View>
     );
 };
@@ -153,8 +154,8 @@ const styles = StyleSheet.create({
         color: '#C06014',
     },
     tripTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 20,
+        fontWeight: '800',
         marginTop: 15,
         marginBottom: 10,
         color: '#854442',
@@ -195,6 +196,12 @@ const styles = StyleSheet.create({
         borderRadius: 14,
         overflow: 'hidden',
         marginBottom: 7
+    },
+    noTripsText: {
+        fontSize: 16,
+        color: '#3C3C3B',
+        marginTop: 30,
+        textAlign: 'center'
     }
 });
 

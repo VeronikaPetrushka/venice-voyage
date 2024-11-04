@@ -10,7 +10,7 @@ const { height } = Dimensions.get('window');
 const Details = ({ place }) => {
     const mapRef = useRef(null);
     const navigation = useNavigation();
-    const [zoomedIn, setZoomedIn] = useState(false);
+    // const [zoomedIn, setZoomedIn] = useState(false);
     const [markerSize, setMarkerSize] = useState(40);
     const [visited, setVisited] = useState(false);
     const [checkInDisabled, setCheckInDisabled] = useState(false);
@@ -46,34 +46,31 @@ const Details = ({ place }) => {
         checkIfVisited();
         loadTrips();
 
-        return () => {
-            console.log("Details component unmounted");
-            mapRef.current = null;
-        };
     }, [place]);
 
-    const handleZoomToggle = () => {
-        const { lat, lng } = place.coordinates[0];
-
-        if (!zoomedIn) {
-            mapRef.current.animateToRegion({
-                latitude: lat,
-                longitude: lng,
-                latitudeDelta: 0.0017,
-                longitudeDelta: 0.0017,
-            }, 1000);
-            setMarkerSize(80);
-        } else {
-            mapRef.current.animateToRegion({
-                latitude: lat,
-                longitude: lng,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
-            }, 1000);
-            setMarkerSize(40);
-        }
-        setZoomedIn(!zoomedIn);
-    };
+    // const handleZoomToggle = () => {
+    //     const { lat, lng } = place.coordinates[0];
+    
+    //     if (!zoomedIn) {
+    //         mapRef.current.animateToRegion({
+    //             latitude: lat,
+    //             longitude: lng,
+    //             latitudeDelta: 0.0017,
+    //             longitudeDelta: 0.0017,
+    //         }, 1000);
+    //         setMarkerSize(80);
+    //     } else {
+    //         mapRef.current.animateToRegion({
+    //             latitude: lat,
+    //             longitude: lng,
+    //             latitudeDelta: 0.04,
+    //             longitudeDelta: 0.04,
+    //         }, 1000);
+    //         setMarkerSize(40);
+    //     }
+    //     setZoomedIn(!zoomedIn);
+    // };
+    
 
     const handleBackPress = () => {
         navigation.navigate('HomeScreen');
@@ -88,6 +85,7 @@ const Details = ({ place }) => {
             <View style={styles.mapContainer}>
                 <MapView
                     ref={mapRef}
+                    key={place.name}
                     style={styles.map}
                     initialRegion={{
                         latitude: place.coordinates[0].lat,
@@ -115,9 +113,9 @@ const Details = ({ place }) => {
                             )}
                         </View>
                     </Marker>
-                    <TouchableOpacity style={styles.zoomButton} onPress={handleZoomToggle}>
+                    {/* <TouchableOpacity style={styles.zoomButton} onPress={handleZoomToggle}>
                         <Text style={styles.zoomButtonText}>{zoomedIn ? "Zoom Out" : "Zoom In"}</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </MapView>
                 <TouchableOpacity  
                     style={[styles.checkBtn, checkInDisabled && { opacity: 0.5 }]} 
@@ -129,10 +127,10 @@ const Details = ({ place }) => {
             </View>
             <View style={styles.textContainer}>
                 <Text style={styles.name}>{place.name}</Text>
-                <ScrollView style={{width: '100%', height: '35%'}}>
+                <ScrollView style={{width: '100%', height: height * 0.35}}>
                     <Text style={styles.description}>{place.description}</Text>
                     <Text style={styles.fact}>{place.fact}</Text>
-                    <View style={{height: 50}}/>
+                    <View style={{height: 100}}/>
                 </ScrollView>
             </View>
         </View>
@@ -144,7 +142,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 0,
-        backgroundColor: '#FAF3E0'
+        backgroundColor: '#FAF3E0',
+        paddingBottom: 30
     },
     backIcon: {
         width: 65,
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 300,
+        height: height * 0.33,
         borderBottomLeftRadius: 16,
         borderBottomRightRadius: 16,
         marginBottom: 16,
@@ -173,13 +172,13 @@ const styles = StyleSheet.create({
     },
     map: {
         width: "48%",
-        height: height * 0.24,
+        height: height * 0.2,
         borderRadius: 10,
         overflow: 'hidden'
     },
     checkBtn: {
         width: "48%",
-        height: height * 0.24,
+        height: height * 0.2,
         borderRadius: 10,
         backgroundColor: '#FFD662',
         alignItems: 'center',
@@ -212,7 +211,6 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         paddingHorizontal: 16,
-        paddingBottom: 20,
         width: '100%'
     },
     name: {

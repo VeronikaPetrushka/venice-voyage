@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, Dimensions } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, Dimensions, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -8,6 +8,10 @@ import MapView, { Marker } from "react-native-maps";
 import Icons from './Icons';
 
 const { height, width } = Dimensions.get('window');
+
+const heightThreshold = 700;
+
+const imageContainerHeight = height < heightThreshold ? height * 0.25 : height * 0.3;
 
 const CheckIn = ({ place }) => {
     const mapRef = useRef(null);
@@ -272,7 +276,7 @@ const styles = StyleSheet.create({
     },
     mapContainer: {
         width: '100%',
-        height: height * 0.3,
+        height: imageContainerHeight,
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 20,
@@ -318,7 +322,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: '100%',
-        height: height * 0.3,
+        height: imageContainerHeight,
         borderRadius: 10,
         overflow: 'hidden',
         marginBottom: 20,
@@ -330,7 +334,7 @@ const styles = StyleSheet.create({
     },
     imagePlaceholder: {
         width: '100%',
-        height: height * 0.3,
+        height: imageContainerHeight,
         borderRadius: 10,
         borderWidth: 2,
         borderColor: '#C06014',
