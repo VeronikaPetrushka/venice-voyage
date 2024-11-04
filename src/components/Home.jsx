@@ -9,6 +9,7 @@ import SettingsModal from "./SettingsModal.jsx";
 import TripModal from "./TripModal.jsx";
 import Tutorial from "./Tutorial.jsx";
 import TipModal from "./TipModal";
+import Icons from "./Icons.jsx";
 import Map from "./Map";
 
 const { height , width} = Dimensions.get('window');
@@ -89,7 +90,12 @@ const Home = () => {
                 </View>
             </View>
 
-            <Map />
+            <View style={{width: '100%', height: '63%'}}>
+                <TouchableOpacity style={styles.quizIcon} onPress={() => navigation.navigate('QuizScreen')}>
+                    <Icons type={'quiz'}/>
+                </TouchableOpacity>
+                <Map />
+            </View>
 
             <TouchableOpacity style={styles.tutorialBtn} onPress={handleTutorialVisible}>
                 <LinearGradient
@@ -201,6 +207,15 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontWeight: '900',
         color: '#3C3C3B'
+    },
+
+    quizIcon: {
+        width: 60,
+        height: 60,
+        position: 'absolute',
+        top: 5,
+        left: 10,
+        zIndex: 15
     },
 
     tutorialBtn: {

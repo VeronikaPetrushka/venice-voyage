@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import DetailsScreen from './src/screens/DetailsScreen';
 import CheckInScreen from './src/screens/CheckInScreen';
 import StatisticScreen from './src/screens/StatisticScreen';
+import QuizScreen from './src/screens/QuizScreen';
 
 enableScreens();
 
@@ -39,6 +40,11 @@ const App = () => {
                         <Stack.Screen 
                             name="StatisticScreen" 
                             component={StatisticScreen} 
+                            options={{ headerShown: false }} 
+                        />
+                        <Stack.Screen 
+                            name="QuizScreen" 
+                            component={QuizScreen} 
                             options={{ headerShown: false }} 
                         />
                     </Stack.Navigator>

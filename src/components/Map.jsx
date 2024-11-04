@@ -132,7 +132,7 @@ const Map = () => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        height: '63%',
+        height: '100%',
         borderRadius: 14,
         overflow: 'hidden',
         borderWidth: 0.5,

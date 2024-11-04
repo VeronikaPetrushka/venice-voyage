@@ -8,6 +8,7 @@ const Tutorial = ({ visible, onClose }) => {
     const tutorialData = [
         { image: require('../assets/tutorial/trip.png'), text: "Set how many days you’re staying" },
         { image: require('../assets/tutorial/map.png'), text: "We’ll generate a list of places for you to visit" },
+        { image: require('../assets/tutorial/quiz.png'), text: "Complete the quiz in one of 2 modes to earn extra points" },
         { image: require('../assets/tutorial/places.png'), text: "Visit each place, check in using your location, and take a photo." },
         { image: require('../assets/tutorial/checkin.png'), text: "Upload the photo to the attraction’s page to earn points. Track your progress on your Statistic." },
         { image: require('../assets/tutorial/bonus.png'), text: "Collect bonuses for visiting all spots in a day or during special times! Now you’re ready to explore Venice like never before!" }
