@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
         paddingTop: height * 0.07,
         paddingHorizontal: 15,
         alignItems: 'flex-end',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)'
+        backgroundColor: 'rgba(0, 0, 0, 0.8)'
     },
 
     modalContent: {

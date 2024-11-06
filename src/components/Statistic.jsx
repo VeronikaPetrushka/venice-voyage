@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
@@ -71,6 +71,7 @@ const Statistic = () => {
     };
 
     return (
+        <ImageBackground source={require('../assets/newDiz/back.png')} style={{ flex: 1 }}>
         <View style={styles.container}>
             <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
                 <Icons type={'back'} />
@@ -137,6 +138,7 @@ const Statistic = () => {
                 )}
             />
         </View>
+        </ImageBackground>
     );
 };
 
@@ -148,12 +150,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         padding: 20,
         paddingTop: height * 0.07,
-        backgroundColor: '#FAF3E0'
     },
     title: {
         fontSize: 24,
         fontWeight: '900',
-        color: '#854442',
+        color: '#FAF3E0',
     },
     score: {
         fontSize: 36,
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         marginTop: 15,
         marginBottom: 10,
-        color: '#854442',
+        color: '#FAF3E0',
     },
     tripContainer: {
         padding: 10,
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
     },
     selectedRange: {
         fontSize: 13,
-        color: '#3C3C3B',
+        color: '#FFD662',
         marginTop: 15
     },
     image: {
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     },
     noTripsText: {
         fontSize: 16,
-        color: '#3C3C3B',
+        color: '#FFD662',
         marginTop: 30,
         textAlign: 'center'
     }

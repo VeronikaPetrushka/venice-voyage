@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, Dimensions, ScrollView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, Dimensions, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -161,6 +161,7 @@ const CheckIn = ({ place }) => {
     };
 
     return (
+        <ImageBackground source={require('../assets/newDiz/back.png')} style={{ flex: 1 }}>
         <View style={styles.container}>
             <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack('')}>
                 <Icons type={'back'} />
@@ -228,9 +229,9 @@ const CheckIn = ({ place }) => {
                 setItems={setItems}
                 placeholder="Select a trip date range"
                 style={styles.picker}
-                dropDownContainerStyle={{ borderColor: '#854442', backgroundColor: '#FAF3E0' }}
-                placeholderStyle={{ color: '#3C3C3B', fontSize: 16 }}
-                textStyle={{ color: '#854442', fontSize: 16 }}
+                dropDownContainerStyle={{ borderColor: '#854442', backgroundColor: '#000' }}
+                placeholderStyle={{ color: '#FAF3E0', fontSize: 16 }}
+                textStyle={{ color: '#FFD662', fontSize: 16 }}
                 dropDownDirection="BOTTOM"
                 onSelectItem={(item) => {
                     setValue(item.value);
@@ -242,6 +243,7 @@ const CheckIn = ({ place }) => {
                 <Text style={styles.checkBtnText}>Check in</Text>
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 };
 
@@ -252,7 +254,6 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        backgroundColor: '#FAF3E0',
         padding: 16,
         paddingTop: height * 0.07,
         paddingBottom: height * 0.05
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
         fontSize: 26,
         fontWeight: '900',
         marginBottom: 30,
-        color: '#3C3C3B',
+        color: '#FAF3E0',
         width: width * 0.8,
         textAlign: 'center'
     },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, ImageBackground } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from "react-native-linear-gradient";
@@ -73,6 +73,7 @@ const Home = () => {
     };
 
     return (
+        <ImageBackground source={require('../assets/newDiz/back.png')} style={{ flex: 1 }}>
         <View style={styles.container}>
 
             <View style={styles.upperPanel}>
@@ -140,6 +141,7 @@ const Home = () => {
             <TipModal visible={tipModalVisible} onClose={handleTipVisible} tip={currentTip} newTip={handleGenerateNewTip} />
 
         </View>
+        </ImageBackground>
     )
 };
 
@@ -152,7 +154,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         padding: 20,
         paddingTop: height * 0.07,
-        backgroundColor: '#FAF3E0'
     },
 
     upperPanel: {
@@ -170,14 +171,14 @@ const styles = StyleSheet.create({
         padding: 14,
         borderRadius: 14,
         borderWidth: 1,
-        borderColor: '#854442',
+        borderColor: '#C06014',
         marginRight: 20
     },
 
     infoText: {
         fontSize: 17,
         fontWeight: '900',
-        color: '#3C3C3B',
+        color: '#FFD662',
     },
 
     settingsContainer: {
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     settingsText: {
         fontSize: 11,
         fontWeight: '900',
-        color: '#3C3C3B'
+        color: '#FFD662'
     },
 
     quizIcon: {

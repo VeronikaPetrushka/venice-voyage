@@ -123,7 +123,7 @@ const Quiz = () => {
     const currentQuestion = quiz[currentQuestionIndex];
 
     return (
-        <ImageBackground source={require('../assets/back/back.jpg')} style={{flex: 1}}>
+        <ImageBackground source={require('../assets/newDiz/back.png')} style={{flex: 1}}>
         <View style={styles.container}>
             <Modal visible={isModalVisible} transparent={true} animationType="slide">
                 <View style={styles.modalContainer}>
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
         padding: 20,
     },
     modalContent: {
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     finishText: {
         fontSize: 30,
         fontWeight: '900',
-        color: '#3C3C3B',
+        color: '#FAF3E0',
         marginBottom: height * 0.15,
         marginTop: height * 0.05
     },

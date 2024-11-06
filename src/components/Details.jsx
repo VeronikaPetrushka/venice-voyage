@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Alert } from "react-native";
+import { View, Image, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Alert, ImageBackground } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker } from "react-native-maps";
@@ -77,6 +77,7 @@ const Details = ({ place }) => {
     };
     
     return (
+        <ImageBackground source={require('../assets/newDiz/back.png')} style={{ flex: 1 }}>
         <View style={styles.container}>
             <TouchableOpacity style={styles.backIcon} onPress={handleBackPress}>
                 <Icons type={'back'}/>
@@ -134,15 +135,16 @@ const Details = ({ place }) => {
                 </ScrollView>
             </View>
         </View>
+        </ImageBackground>
     );
 };
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        width: '100%',
+        height: '100%',
         paddingTop: 0,
-        backgroundColor: '#FAF3E0',
         paddingBottom: 30
     },
     backIcon: {
@@ -217,18 +219,18 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '900',
         marginBottom: 15,
-        color: '#854442',
+        color: '#C06014',
         textAlign: 'center'
     },
     description: {
         fontSize: 17,
         marginBottom: 10,
-        color: '#3C3C3B',
+        color: '#FFD662',
         textAlign: 'justify'
     },
     fact: {
         fontSize: 15,
-        color: '#3C3C3B',
+        color: '#FFD662',
         textAlign: 'justify'
     },
     visitedIcon: {
